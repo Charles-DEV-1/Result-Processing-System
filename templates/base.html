@@ -275,6 +275,85 @@ body {
   color: #666;
   font-size: 0.9rem;
 }
+      /* ========================= */
+/* TABLE RESPONSIVENESS FIX */
+/* ========================= */
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-wrapper {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px; /* prevents crushing */
+}
+
+.table-wrapper th,
+.table-wrapper td {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  text-align: center;
+  white-space: nowrap;
+  font-size: 0.9rem;
+}
+
+.table-wrapper thead {
+  background: #667eea;
+  color: white;
+}
+
+.table-wrapper tr:nth-child(even) {
+  background: #f8f9fa;
+}
+
+/* ===== MOBILE CARD VIEW ===== */
+@media (max-width: 768px) {
+  .table-wrapper {
+    min-width: 100%;
+  }
+
+  .table-wrapper thead {
+    display: none;
+  }
+
+  .table-wrapper,
+  .table-wrapper tbody,
+  .table-wrapper tr,
+  .table-wrapper td {
+    display: block;
+    width: 100%;
+  }
+
+  .table-wrapper tr {
+    margin-bottom: 15px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    padding: 10px;
+  }
+
+  .table-wrapper td {
+    text-align: right;
+    padding-left: 50%;
+    position: relative;
+    border: none;
+    border-bottom: 1px solid #eee;
+  }
+
+  .table-wrapper td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 12px;
+    width: 45%;
+    text-align: left;
+    font-weight: 600;
+    color: #667eea;
+  }
+}
+
 
     </style>
   </head>
@@ -372,4 +451,5 @@ body {
     </div>
   </body>
 </html>
+
 
