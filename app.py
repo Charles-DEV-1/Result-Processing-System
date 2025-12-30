@@ -242,7 +242,8 @@ def admin_dashboard():
     semester = request.args.get('semester', '')
 
     # Get all departments for dropdown
-    departments = db.session.query(Student.department).distinct().all()  # list of tuples
+    departments = [d[0] for d in db.session.query(Student.department).distinct().all()]
+ # list of tuples
 
     # Query results with filters
     query = db.session.query(Result).join(Student).join(Course)
@@ -430,3 +431,4 @@ if __name__ == '__main__':
     init_db()
 
     app.run(debug=False)
+
