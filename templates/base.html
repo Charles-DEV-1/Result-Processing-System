@@ -1,455 +1,293 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}Result Processing System{% endblock %}</title>
-    <link
-      rel="icon"
-      type="image/png"
-      href="{{ url_for('static', filename='favicon.ico') }}"
-    />
-    <link rel="icon" href="static/favicon.ico" type="image/x-icon" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Result Processing System{% endblock %}</title>
 
-    <style>
-/* ===== RESET ===== */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" />
 
-body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: #f2f4f8;
-  overflow-x: hidden;
-}
+  <style>
+    /* ===== RESET ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-/* ===== PAGE LAYOUT ===== */
-.page {
-  min-height: 100vh;
-  width: 100%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 12px;
-}
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #f2f4f8;
+      overflow-x: hidden;
+    }
 
-.container {
-  max-width: 1300px;
-  margin: auto;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-  padding: 24px;
-}
+    /* ===== PAGE ===== */
+    .page {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      padding: 12px;
+    }
 
-/* ===== HEADER ===== */
-.header {
-  text-align: center;
-  margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: 3px solid #667eea;
-}
+    .container {
+      max-width: 1300px;
+      margin: auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 10px 40px rgba(0,0,0,.2);
+      padding: 24px;
+    }
 
-.header h1 {
-  color: #667eea;
-  font-size: 1.8rem;
-  margin-bottom: 6px;
-}
+    /* ===== HEADER ===== */
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 3px solid #667eea;
+    }
 
-.header p {
-  color: #666;
-  font-size: 0.95rem;
-}
+    .header h1 {
+      color: #667eea;
+      font-size: 1.8rem;
+    }
 
-/* ===== NAV ===== */
-.nav {
-  background: #f8f9fa;
-  padding: 12px;
-  border-radius: 6px;
-  margin-bottom: 24px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: space-between;
-  align-items: center;
-}
+    .header p {
+      color: #666;
+      font-size: .95rem;
+    }
 
-.nav a {
-  color: #667eea;
-  text-decoration: none;
-  padding: 8px 14px;
-  border-radius: 5px;
-  transition: 0.3s;
-  font-size: 0.9rem;
-}
+    /* ===== NAV ===== */
+    .nav {
+      background: #f8f9fa;
+      padding: 12px;
+      border-radius: 6px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
 
-.nav a:hover {
-  background: #667eea;
-  color: #fff;
-}
+    .nav a {
+      color: #667eea;
+      text-decoration: none;
+      padding: 8px 14px;
+      border-radius: 5px;
+      transition: .3s;
+      font-size: .9rem;
+    }
 
-/* ===== FLASH ===== */
-.flash {
-  padding: 14px;
-  border-radius: 5px;
-  margin-bottom: 16px;
-  font-size: 0.9rem;
-}
+    .nav a:hover {
+      background: #667eea;
+      color: #fff;
+    }
 
-.flash.success {
-  background: #d4edda;
-  color: #155724;
-}
+    /* ===== FLASH ===== */
+    .flash {
+      padding: 14px;
+      border-radius: 5px;
+      margin-bottom: 16px;
+      font-size: .9rem;
+    }
 
-.flash.error {
-  background: #f8d7da;
-  color: #721c24;
-}
+    .flash.success { background:#d4edda;color:#155724; }
+    .flash.error { background:#f8d7da;color:#721c24; }
 
-/* ===== BUTTONS ===== */
-.btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 0.95rem;
-  transition: 0.3s;
-}
+    /* ===== BUTTONS ===== */
+    .btn {
+      padding: 10px 20px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      font-size: .95rem;
+    }
 
-.btn-primary {
-  background: #667eea;
-  color: #fff;
-}
+    .btn-primary { background:#667eea;color:#fff; }
+    .btn-primary:hover { background:#5568d3; }
 
-.btn-primary:hover {
-  background: #5568d3;
-}
+    .btn-success { background:#28a745;color:#fff; }
 
-.btn-success {
-  background: #28a745;
-  color: #fff;
-}
+    /* ===== HERO ===== */
+    .hero {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      padding: 32px;
+      border-radius: 10px;
+      text-align: center;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.2);
+    }
 
-/* ===== FILTER FORM ===== */
-.filter-form {
-  background: #f8f9fa;
-  padding: 16px;
-  border-radius: 6px;
-  margin-bottom: 20px;
-}
+    .hero h2 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
 
-.form-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
+    .hero p {
+      font-size: 1rem;
+      margin-bottom: 16px;
+    }
 
-.form-group {
-  flex: 1;
-  min-width: 160px;
-}
+    /* ===== FEATURES ===== */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 30px;
+    }
 
-.form-group label {
-  font-size: 0.85rem;
-  color: #444;
-  margin-bottom: 4px;
-  display: block;
-}
+    .feature-card {
+      background: #fff;
+      padding: 20px;
+      border-left: 5px solid #667eea;
+      border-radius: 8px;
+      box-shadow: 0 6px 20px rgba(0,0,0,.1);
+    }
 
-.form-group select {
-  width: 100%;
-  padding: 8px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
+    .feature-card h3 {
+      color: #667eea;
+      margin-bottom: 6px;
+      font-size: 1.2rem;
+    }
 
-/* ===== TABLE FIX (CRITICAL) ===== */
-.table-responsive {
-  width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  margin-bottom: 20px;
-}
+    .feature-card p {
+      font-size: .9rem;
+      color: #555;
+    }
 
-/* Stable table behavior */
-.table-wrapper {
-  width: 100%;
-  min-width: 1000px; /* prevents collapse */
-  border-collapse: collapse;
-  table-layout: fixed;
-}
+    /* ===== TABLE (FIXED) ===== */
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+      margin-bottom: 20px;
+    }
 
-/* Cells */
-.table-wrapper th,
-.table-wrapper td {
-  padding: 10px;
-  border: 1px solid #ddd;
-  text-align: center;
-  white-space: nowrap;
-  font-size: 0.85rem;
-}
+    .table-wrapper {
+      width: 100%;
+      min-width: 1000px;
+      border-collapse: collapse;
+    }
 
-/* Header */
-.table-wrapper thead th {
-  background: #667eea;
-  color: #fff;
-  position: sticky;
-  top: 0;
-  z-index: 3;
-}
+    .table-wrapper th,
+    .table-wrapper td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: center;
+      white-space: nowrap;
+      font-size: .85rem;
+    }
 
-/* Zebra rows */
-.table-wrapper tbody tr:nth-child(even) {
-  background: #f8f9fa;
-}
+    .table-wrapper thead th {
+      background: #667eea;
+      color: #fff;
+    }
 
-/* Hover */
-.table-wrapper tbody tr:hover {
-  background: #eef2ff;
-}
+    .table-wrapper tbody tr:nth-child(even) {
+      background: #f8f9fa;
+    }
 
-/* ===== MOBILE STACK MODE ===== */
-@media (max-width: 768px) {
-  .container {
-    padding: 16px;
-  }
+    /* ===== MOBILE TABLE ===== */
+    @media (max-width: 768px) {
+      .table-wrapper thead { display:none; }
 
-  .nav {
-    justify-content: center;
-  }
+      .table-wrapper,
+      .table-wrapper tbody,
+      .table-wrapper tr,
+      .table-wrapper td {
+        display:block;
+        width:100%;
+      }
 
-  .btn {
-    width: 100%;
-  }
+      .table-wrapper tr {
+        background:#fff;
+        margin-bottom:16px;
+        padding:10px;
+        border-radius:8px;
+        box-shadow:0 4px 12px rgba(0,0,0,.08);
+      }
 
-  /* TABLE -> CARD MODE */
-  .table-wrapper {
-    min-width: unset;
-    border: 0;
-  }
+      .table-wrapper td {
+        display:flex;
+        justify-content:space-between;
+        border:none;
+        border-bottom:1px solid #eee;
+      }
 
-  .table-wrapper thead {
-    display: none;
-  }
+      .table-wrapper td::before {
+        content: attr(data-label);
+        font-weight:600;
+        color:#667eea;
+      }
+    }
 
-  .table-wrapper tr {
-    display: block;
-    margin-bottom: 16px;
-    background: #fff;
-    border-radius: 8px;
-    padding: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  }
+    /* ===== FOOTER ===== */
+    .footer {
+      margin-top: 40px;
+      text-align: center;
+      padding-top: 12px;
+      border-top: 2px solid #667eea;
+      font-size: .9rem;
+      color: #666;
+    }
+  </style>
+</head>
 
-  .table-wrapper td {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    text-align: left;
-    padding: 8px 6px;
-    border: none;
-    border-bottom: 1px solid #eee;
-    white-space: normal;
-    font-size: 0.85rem;
-  }
+<body>
+<div class="page">
+<div class="container">
 
-  .table-wrapper td:last-child {
-    border-bottom: none;
-  }
+  <div class="header">
+    <h1>
+      <img src="{{ url_for('static', filename='logo.png') }}" style="height:60px;vertical-align:middle">
+      Maranatha University
+    </h1>
+    <p>Result Processing System</p>
+  </div>
 
-  .table-wrapper td::before {
-    content: attr(data-label);
-    font-weight: 600;
-    color: #667eea;
-    flex: 1;
-    margin-right: 10px;
-  }
-}
-
-/* ===== FOOTER ===== */
-.footer {
-  text-align: center;
-  margin-top: 40px;
-  padding-top: 12px;
-  border-top: 2px solid #667eea;
-  color: #666;
-  font-size: 0.9rem;
-}
-      /* ========================= */
-/* TABLE RESPONSIVENESS FIX */
-/* ========================= */
-
-.table-responsive {
-  width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.table-wrapper {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 900px; /* prevents crushing */
-}
-
-.table-wrapper th,
-.table-wrapper td {
-  padding: 10px 12px;
-  border: 1px solid #ddd;
-  text-align: center;
-  white-space: nowrap;
-  font-size: 0.9rem;
-}
-
-.table-wrapper thead {
-  background: #667eea;
-  color: white;
-}
-
-.table-wrapper tr:nth-child(even) {
-  background: #f8f9fa;
-}
-
-/* ===== MOBILE CARD VIEW ===== */
-@media (max-width: 768px) {
-  .table-wrapper {
-    min-width: 100%;
-  }
-
-  .table-wrapper thead {
-    display: none;
-  }
-
-  .table-wrapper,
-  .table-wrapper tbody,
-  .table-wrapper tr,
-  .table-wrapper td {
-    display: block;
-    width: 100%;
-  }
-
-  .table-wrapper tr {
-    margin-bottom: 15px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-    padding: 10px;
-  }
-
-  .table-wrapper td {
-    text-align: right;
-    padding-left: 50%;
-    position: relative;
-    border: none;
-    border-bottom: 1px solid #eee;
-  }
-
-  .table-wrapper td::before {
-    content: attr(data-label);
-    position: absolute;
-    left: 12px;
-    width: 45%;
-    text-align: left;
-    font-weight: 600;
-    color: #667eea;
-  }
-}
-
-
-    </style>
-  </head>
-
-  <body>
-    <div class="page">
-      <div class="container">
-        <div class="header">
-          <h1>
-            <img
-              src="{{ url_for('static', filename='logo.png') }}"
-              alt="School Logo"
-              style="height: 60px; vertical-align: middle"
-            />
-            Maranatha University
-          </h1>
-          <p>Result Processing System</p>
-        </div>
-
-        {% if session.user_id %}
-        <div class="nav">
-          <div>
-            <a href="{{ url_for('dashboard') }}">Dashboard</a>
-            {% if session.role == 'teacher' %}
-            <a href="{{ url_for('enter_result') }}">Enter Result</a>
-            {% endif %} {% if session.role == 'admin' %}
-            <a href="{{ url_for('admin_dashboard') }}">Admin Panel</a>
-            <a href="{{ url_for('manage_courses') }}">Manage Courses</a>
-            {% endif %}
-          </div>
-          <div>
-            <span style="margin-right: 12px"
-              >Welcome, {{ session.username }} ({{ session.role }})</span
-            >
-            <a href="{{ url_for('logout') }}">Logout</a>
-          </div>
-        </div>
-        {% endif %} {% with messages =
-        get_flashed_messages(with_categories=true) %} {% if messages %} {% for
-        category, message in messages %}
-        <div class="flash {{ category }}">{{ message }}</div>
-        {% endfor %} {% endif %} {% endwith %}
-
-        <!-- HERO SECTION -->
-        <div class="hero">
-          <h2>Welcome to the Result Processing System</h2>
-          <p>
-            Manage results, track student progress, and generate reports
-            seamlessly.
-          </p>
-          <a class="btn btn-primary" href="{{ url_for('dashboard') }}"
-            >Go to Dashboard</a
-          >
-        </div>
-
-        <!-- FEATURE CARDS -->
-        <div class="features">
-          <div class="feature-card">
-            <h3>Fast & Accurate</h3>
-            <p>
-              Enter and process results with speed and precision, reducing
-              manual errors.
-            </p>
-          </div>
-          <div class="feature-card">
-            <h3>Secure Access</h3>
-            <p>
-              Teachers, students, and admins have role-based access ensuring
-              data safety.
-            </p>
-          </div>
-          <div class="feature-card">
-            <h3>Insightful Reports</h3>
-            <p>
-              Visualize performance through charts and summaries to make
-              informed decisions.
-            </p>
-          </div>
-          <div class="feature-card">
-            <h3>User-Friendly</h3>
-            <p>
-              An intuitive interface designed to save time and simplify result
-              management.
-            </p>
-          </div>
-        </div>
-
-        {% block content %}{% endblock %}
-
-        <!-- FOOTER -->
-        <div class="footer">
-          &copy; {{ current_year }} Maranatha University. All rights reserved.
-        </div>
-      </div>
+  {% if session.user_id %}
+  <div class="nav">
+    <div>
+      <a href="{{ url_for('dashboard') }}">Dashboard</a>
+      {% if session.role == 'teacher' %}
+      <a href="{{ url_for('enter_result') }}">Enter Result</a>
+      {% endif %}
+      {% if session.role == 'admin' %}
+      <a href="{{ url_for('admin_dashboard') }}">Admin Panel</a>
+      <a href="{{ url_for('manage_courses') }}">Manage Courses</a>
+      {% endif %}
     </div>
-  </body>
+    <div>
+      Welcome, {{ session.username }} ({{ session.role }})
+      <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+  </div>
+  {% endif %}
+
+  {% for category,message in get_flashed_messages(with_categories=true) %}
+    <div class="flash {{ category }}">{{ message }}</div>
+  {% endfor %}
+
+  <!-- HERO -->
+  <div class="hero">
+    <h2>Welcome to the Result Processing System</h2>
+    <p>Manage results, track performance and generate reports easily.</p>
+    <a class="btn btn-primary" href="{{ url_for('dashboard') }}">Go to Dashboard</a>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="features">
+    <div class="feature-card"><h3>Fast & Accurate</h3><p>Error-free result processing.</p></div>
+    <div class="feature-card"><h3>Secure Access</h3><p>Role-based permissions.</p></div>
+    <div class="feature-card"><h3>Insightful Reports</h3><p>Export GPA & summaries.</p></div>
+    <div class="feature-card"><h3>User Friendly</h3><p>Clean and simple UI.</p></div>
+  </div>
+
+  {% block content %}{% endblock %}
+
+  <div class="footer">
+    &copy; {{ current_year }} Maranatha University. All rights reserved.
+  </div>
+
+</div>
+</div>
+</body>
 </html>
-
-
