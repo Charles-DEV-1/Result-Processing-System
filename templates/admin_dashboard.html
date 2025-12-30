@@ -1,88 +1,366 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Result Processing System{% endblock %}</title>
 
-{% block content %}
-<h2>Admin Dashboard - All Results</h2>
-<link rel="stylesheet" href="style.css">
-<div class="filter-form">
-    <form method="GET">
-        <div class="form-row">
-            <div class="form-group">
-                <label>Level</label>
-                <select name="level">
-                    <option value="">All Levels</option>
-                    <option value="100" {% if request.args.get('level') == '100' %}selected{% endif %}>100</option>
-                    <option value="200" {% if request.args.get('level') == '200' %}selected{% endif %}>200</option>
-                    <option value="300" {% if request.args.get('level') == '300' %}selected{% endif %}>300</option>
-                    <option value="400" {% if request.args.get('level') == '400' %}selected{% endif %}>400</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Department</label>
-                <select name="department">
-                    <option value="">All Departments</option>
-                    {% for dept in departments %}
-                    <option value="{{ dept[0] }}" {% if request.args.get('department') == dept[0] %}selected{% endif %}>{{ dept[0] }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Semester</label>
-                <select name="semester">
-                    <option value="">All Semesters</option>
-                    <option value="First" {% if request.args.get('semester') == 'First' %}selected{% endif %}>First</option>
-                    <option value="Second" {% if request.args.get('semester') == 'Second' %}selected{% endif %}>Second</option>
-                </select>
-            </div>
-            <div class="form-group" style="display: flex; align-items: flex-end;">
-                <button type="submit" class="btn btn-primary">Filter</button>
-            </div>
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='favicon.ico') }}"
+    />
+    <link rel="icon" href="static/favicon.ico" type="image/x-icon" />
+
+    <!-- Global Styles -->
+    <style>
+      /* ===== RESET ===== */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        overflow-x: hidden;
+      }
+
+      /* ===== PAGE CONTAINER ===== */
+      .page {
+        min-height: 100vh;
+        width: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 10px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        padding: 24px;
+      }
+
+      /* ===== HEADER ===== */
+      .header {
+        text-align: center;
+        margin-bottom: 24px;
+        padding-bottom: 16px;
+        border-bottom: 3px solid #667eea;
+      }
+      .header h1 {
+        color: #667eea;
+        font-size: 1.8rem;
+        margin-bottom: 6px;
+      }
+      .header p {
+        color: #666;
+        font-size: 0.95rem;
+      }
+
+      /* ===== NAV ===== */
+      .nav {
+        background: #f8f9fa;
+        padding: 12px;
+        border-radius: 6px;
+        margin-bottom: 24px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .nav a {
+        color: #667eea;
+        text-decoration: none;
+        padding: 8px 14px;
+        border-radius: 5px;
+        transition: 0.3s;
+        font-size: 0.9rem;
+      }
+      .nav a:hover {
+        background: #667eea;
+        color: white;
+      }
+
+      /* ===== FLASH MESSAGES ===== */
+      .flash {
+        padding: 14px;
+        border-radius: 5px;
+        margin-bottom: 16px;
+        font-size: 0.9rem;
+      }
+      .flash.success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+      .flash.error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+
+      /* ===== BUTTONS ===== */
+      .btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.95rem;
+        transition: 0.3s;
+      }
+      .btn-primary {
+        background: #667eea;
+        color: white;
+      }
+      .btn-primary:hover {
+        background: #5568d3;
+      }
+      .btn-success {
+        background: #28a745;
+        color: white;
+      }
+      .btn-success:hover {
+        background: #218838;
+      }
+
+      /* ===== HERO SECTION (Homepage Only) ===== */
+      .hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 10px;
+        padding: 30px;
+        color: white;
+        text-align: center;
+        margin-bottom: 24px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+      }
+      .hero h2 {
+        font-size: 2rem;
+        margin-bottom: 12px;
+        animation: fadeInDown 1s ease;
+      }
+      .hero p {
+        font-size: 1rem;
+        margin-bottom: 16px;
+      }
+      .hero .btn {
+        font-size: 1rem;
+        padding: 12px 24px;
+      }
+      @keyframes fadeInDown {
+        0% {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* ===== FEATURE CARDS (Homepage Only) ===== */
+      .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+      .feature-card {
+        background: white;
+        border-left: 5px solid #667eea;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+      .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+      }
+      .feature-card h3 {
+        color: #667eea;
+        margin-bottom: 8px;
+        font-size: 1.2rem;
+      }
+      .feature-card p {
+        font-size: 0.9rem;
+        color: #555;
+      }
+
+      /* ===== TABLES ===== */
+      .table-wrapper {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 600px;
+        margin-top: 16px;
+      }
+      .table-wrapper th,
+      .table-wrapper td {
+        padding: 8px 12px;
+        text-align: left;
+        border: 1px solid #ddd;
+      }
+      .table-wrapper th {
+        background: #667eea;
+        color: white;
+      }
+      .table-wrapper tr:hover {
+        background: #f8f9fa;
+      }
+      .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+      }
+
+      /* ===== FORMS ===== */
+      .form-group {
+        margin-bottom: 16px;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+        color: #333;
+        font-size: 0.9rem;
+      }
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #ddd;
+        border-radius: 5px;
+        font-size: 14px;
+      }
+      .form-group input:focus,
+      .form-group select:focus {
+        border-color: #667eea;
+        outline: none;
+      }
+
+      /* ===== FOOTER ===== */
+      .footer {
+        text-align: center;
+        margin-top: 40px;
+        padding-top: 12px;
+        border-top: 2px solid #667eea;
+        color: #666;
+        font-size: 0.9rem;
+      }
+
+      /* ===== MOBILE ===== */
+      @media (max-width: 768px) {
+        .table-wrapper,
+        .table-wrapper thead,
+        .table-wrapper tbody,
+        .table-wrapper th,
+        .table-wrapper td,
+        .table-wrapper tr {
+          display: block;
+        }
+        .table-wrapper thead tr {
+          display: none;
+        }
+        .table-wrapper tr {
+          margin-bottom: 15px;
+          border: 1px solid #ccc;
+          padding: 10px;
+          background: #fafafa;
+          border-radius: 5px;
+        }
+        .table-wrapper td {
+          text-align: right;
+          padding-left: 50%;
+          position: relative;
+          border: none;
+          border-bottom: 1px solid #eee;
+        }
+        .table-wrapper td::before {
+          content: attr(data-label);
+          position: absolute;
+          left: 0;
+          width: 45%;
+          padding-left: 10px;
+          font-weight: bold;
+          text-align: left;
+        }
+      }
+      @media (max-width: 600px) {
+        .container {
+          padding: 16px;
+        }
+        .header h1 {
+          font-size: 1.4rem;
+        }
+        .nav {
+          justify-content: center;
+        }
+        .btn {
+          width: 100%;
+        }
+      }
+    </style>
+
+    {% block extra_head %}{% endblock %}
+  </head>
+
+  <body>
+    <div class="page">
+      <div class="container">
+        <!-- Header -->
+        <div class="header">
+          <h1>
+            <img
+              src="{{ url_for('static', filename='logo.png') }}"
+              alt="School Logo"
+              style="height: 60px; vertical-align: middle"
+            />
+            Maranatha University
+          </h1>
+          <p>Result Processing System</p>
         </div>
-    </form>
-</div>
 
-<div style="margin-bottom: 20px;">
-    <a href="{{ url_for('export_excel') }}?level={{ request.args.get('level', '') }}&department={{ request.args.get('department', '') }}&semester={{ request.args.get('semester', '') }}" class="btn btn-success">
-        Export to Excel
-    </a>
-</div>
+        <!-- Navigation -->
+        {% if session.user_id %}
+        <div class="nav">
+          <div>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            {% if session.role == 'teacher' %}
+            <a href="{{ url_for('enter_result') }}">Enter Result</a>
+            {% endif %} {% if session.role == 'admin' %}
+            <a href="{{ url_for('admin_dashboard') }}">Admin Panel</a>
+            <a href="{{ url_for('manage_courses') }}">Manage Courses</a>
+            {% endif %}
+          </div>
+          <div>
+            <span style="margin-right: 12px">
+              Welcome, {{ session.username }} ({{ session.role }})
+            </span>
+            <a href="{{ url_for('logout') }}">Logout</a>
+          </div>
+        </div>
+        {% endif %}
 
-<div class="table-responsive">
-    <table class="table-wrapper">
-        <thead>
-            <tr>
-                <th>Matric No</th>
-                <th>Student Name</th>
-                {% set all_courses = [] %}
-                {% for s in students %}
-                    {% for c in s.courses.keys() %}
-                        {% if c not in all_courses %}
-                            {% set _ = all_courses.append(c) %}
-                        {% endif %}
-                    {% endfor %}
-                {% endfor %}
-                {% for course in all_courses %}
-                    <th>{{ course }}</th>
-                {% endfor %}
-                <th>GPA</th>
-            </tr>
-        </thead>
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if
+        messages %} {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %} {% endif %} {% endwith %}
 
-        <tbody>
-            {% for s in students %}
-            <tr>
-                <td data-label="Matric No">{{ s.student.matric_number }}</td>
-                <td data-label="Student Name">{{ s.student.full_name }}</td>
-                {% for course in all_courses %}
-                    <td data-label="{{ course }}">{{ s.courses.get(course, "-") }}</td>
-                {% endfor %}
-                <td data-label="GPA"><strong>{{ s.gpa }}</strong></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+        <!-- Homepage Hero & Features (optional, only shows if page uses them) -->
+        {% block hero %}{% endblock %} {% block features %}{% endblock %}
 
-{% if not students %}
-<p style="text-align: center; padding: 40px; color: #999;">No results found. Try adjusting the filters.</p>
-{% endif %}
-{% endblock %}
+        <!-- Page-specific content -->
+        {% block content %}{% endblock %}
+
+        <!-- Footer -->
+        <div class="footer">
+          &copy; {{ current_year }} Maranatha University. All rights reserved.
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
