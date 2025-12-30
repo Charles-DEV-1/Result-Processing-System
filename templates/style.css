@@ -1,0 +1,39 @@
+/* Table wrapper for horizontal scrolling */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Table styling */
+.table-wrapper {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px; /* keeps table readable on desktop */
+}
+
+.table-wrapper th,
+.table-wrapper td {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  text-align: left;
+  white-space: nowrap; /* prevents content from breaking */
+}
+
+.table-wrapper th {
+  background: #667eea;
+  color: white;
+}
+
+.table-wrapper tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* Optional: smaller padding/font on very small screens */
+@media (max-width: 600px) {
+  .table-wrapper th,
+  .table-wrapper td {
+    padding: 8px 10px;
+    font-size: 0.85rem;
+  }
+}

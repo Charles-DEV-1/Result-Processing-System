@@ -1,0 +1,40 @@
+{% extends "base.html" %} {% block content %}
+<div style="text-align: center; padding: 50px 0">
+  <h2>Welcome to the Result Processing System</h2>
+  <p style="margin: 20px 0; color: #666">
+    Manage student results efficiently and accurately
+  </p>
+  <div style="margin-top: 30px">
+    <a href="{{ url_for('login') }}" class="btn btn-primary">Login</a>
+    <a
+      href="{{ url_for('register') }}"
+      class="btn btn-success"
+      style="
+        margin-left: 10px;
+        background-color: #52c16c;
+        border-color: #52c16c;
+      "
+      >Register</a
+    >
+  </div>
+
+  <div
+    style="
+      margin-top: 50px;
+      text-align: left;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    "
+  >
+    <h3>Features:</h3>
+    <ul style="line-height: 2; color: #555">
+      <li>✅ Teachers can enter student results</li>
+      <li>✅ Automatic CGPA calculation</li>
+      <li>✅ Admin dashboard for result management</li>
+      <li>✅ Export results to Excel</li>
+      <li>✅ Filter by Level, Department, Semester</li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

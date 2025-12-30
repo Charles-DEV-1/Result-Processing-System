@@ -1,0 +1,29 @@
+{% extends 'base.html' %} {% block content %}
+<h2>Dashboard</h2>
+<div class="stats-grid">
+  <div class="stat-card">
+    <h3>{{ total_students }}</h3>
+    <p>Total Students</p>
+  </div>
+  <div class="stat-card">
+    <h3>{{ total_courses }}</h3>
+    <p>Total Courses</p>
+  </div>
+  <div class="stat-card">
+    <h3>{{ total_results }}</h3>
+    <p>Results Entered</p>
+  </div>
+</div>
+
+<div style="text-align: center; padding: 30px">
+  {% if session.role == 'teacher' %}
+  <a href="{{ url_for('enter_result') }}" class="btn btn-primary"
+    >Enter New Result</a
+  >
+  {% endif %} {% if session.role == 'admin' %}
+  <a href="{{ url_for('admin_dashboard') }}" class="btn btn-primary"
+    >View All Results</a
+  >
+  {% endif %}
+</div>
+{% endblock %}

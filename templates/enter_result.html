@@ -1,0 +1,89 @@
+{% extends 'base.html' %} {% block content %}
+<h2>Enter Student Result</h2>
+<form method="POST" style="max-width: 800px; margin: 30px auto">
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px">
+    <div class="form-group">
+      <label>Matric Number</label>
+      <input type="text" name="matric_number" required />
+    </div>
+    <div class="form-group">
+      <label>Student Name</label>
+      <input type="text" name="student_name" required />
+    </div>
+    <div class="form-group">
+      <label>Department</label>
+      <select name="department" required>
+        <option value="">Select Department</option>
+        <option value="Computer Science">Computer Science</option>
+        <option value="Software Engineering">Software Engineering</option>
+        <option value="Information Technology">Information Technology</option>
+        <option value="Cyber Security">Cyber Security</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Level</label>
+      <select name="level" required>
+        <option value="">Select Level</option>
+        <option value="100">100 Level</option>
+        <option value="200">200 Level</option>
+        <option value="300">300 Level</option>
+        <option value="400">400 Level</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Course Code</label>
+      <input type="text" name="course_code" list="courses" required />
+      <datalist id="courses">
+        {% for course in courses %}
+        <option value="{{ course.course_code }}">
+          {{ course.course_title }}
+        </option>
+        {% endfor %}
+      </datalist>
+    </div>
+    <div class="form-group">
+      <label>Course Title</label>
+      <input type="text" name="course_title" required />
+    </div>
+    <div class="form-group">
+      <label>Course Unit</label>
+      <input type="number" name="course_unit" min="1" max="6" required />
+    </div>
+    <div class="form-group">
+      <label>Semester</label>
+      <select name="semester" required>
+        <option value="">Select Semester</option>
+        <option value="First">First Semester</option>
+        <option value="Second">Second Semester</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Session</label>
+      <input type="text" name="session" placeholder="e.g. 2023/2024" required />
+    </div>
+    <div class="form-group">
+      <label>CA Score (Max 30)</label>
+      <input
+        type="number"
+        name="ca_score"
+        min="0"
+        max="30"
+        step="0.01"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label>Exam Score (Max 70)</label>
+      <input
+        type="number"
+        name="exam_score"
+        min="0"
+        max="70"
+        step="0.01"
+        required
+      />
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit Result</button>
+</form>
+{% endblock %}
