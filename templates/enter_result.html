@@ -1,7 +1,7 @@
 {% extends 'base.html' %} {% block content %}
 <h2>Enter Student Result</h2>
 <form method="POST" style="max-width: 800px; margin: 30px auto">
-  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px">
+  <div class="form-grid">
     <div class="form-group">
       <label>Matric Number</label>
       <input type="text" name="matric_number" required />
@@ -87,3 +87,4 @@
   <button type="submit" class="btn btn-primary">Submit Result</button>
 </form>
 {% endblock %}
+
