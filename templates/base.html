@@ -106,6 +106,36 @@
 
     .btn-success { background:#28a745;color:#fff; }
 
+    /* ===== FORM INPUTS (GLOBAL FIX) ===== */
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+  color: #444;
+}
+
+.form-group input,
+.form-group select {
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 0.9rem;
+  background: #fff;
+  transition: 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 2px rgba(102,126,234,0.15);
+}
+
+
     /* ===== HERO ===== */
     .hero {
       background: linear-gradient(135deg, #667eea, #764ba2);
@@ -347,4 +377,5 @@
 </div>
 </body>
 </html>
+
 
