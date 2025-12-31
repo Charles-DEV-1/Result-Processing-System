@@ -236,50 +236,62 @@ def enter_result():
 @app.route('/admin/dashboard')
 @admin_required
 def admin_dashboard():
-    # Get filter values from query string
     level = request.args.get('level', '')
     department = request.args.get('department', '')
     semester = request.args.get('semester', '')
 
-    # Get all departments for dropdown
-    departments = [d[0] for d in db.session.query(Student.department).distinct().all()]
- # list of tuples
-
-    # Query results with filters
-    query = db.session.query(Result).join(Student).join(Course)
+    query = (
+        db.session.query(Result)
+        .join(Student)
+        .join(Course)
+    )
 
     if level:
         query = query.filter(Student.level == level)
+
     if department:
         query = query.filter(Student.department == department)
+
     if semester:
         query = query.filter(Result.semester == semester)
 
     results = query.all()
 
-    # Map students to results
+    # Get departments for dropdown (FULL NAMES)
+    departments = [
+        d[0] for d in db.session.query(Student.department).distinct().all()
+    ]
+
     students_map = {}
+
     for r in results:
         sid = r.student.id
+
         if sid not in students_map:
-            students_map[sid] = {"student": r.student, "courses": {}, "gpa": 0}
+            students_map[sid] = {
+                "student": r.student,
+                "courses": {},
+                "gpa": 0
+            }
+
         students_map[sid]["courses"][r.course.course_code] = r.total_score
 
-    # Calculate GPA for each student
     for data in students_map.values():
-        student_results = Result.query.filter_by(student_id=data["student"].id)
+        student_results = Result.query.filter_by(
+            student_id=data["student"].id
+        )
+
         if semester:
             student_results = student_results.filter_by(semester=semester)
+
         data["gpa"] = calculate_gpa(student_results.all())
 
     return render_template(
         "admin_dashboard.html",
         students=list(students_map.values()),
-        departments=departments,  # pass departments to template
-        selected_level=level,
-        selected_department=department,
-        selected_semester=semester
+        departments=departments
     )
+
 
 
 @app.route('/admin/courses', methods=['GET', 'POST'])
@@ -431,4 +443,5 @@ if __name__ == '__main__':
     init_db()
 
     app.run(debug=False)
+
 
